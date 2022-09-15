@@ -1,5 +1,3 @@
-import Utils
-
 public func adder(_ a: UInt32, _ b: UInt32) -> UInt32 {
   var a = a
   var b = b
