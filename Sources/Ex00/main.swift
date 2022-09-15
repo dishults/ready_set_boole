@@ -1,5 +1,7 @@
-let a: UInt32 = 11, b: UInt32 = 22
+let a: UInt32 = 11
+let b: UInt32 = 22
 
-print([
+print(
+  [
     a.info, " +", b.info, " =", adder(a, b).info,
-].joined(separator: "\n"))
+  ].joined(separator: "\n"))

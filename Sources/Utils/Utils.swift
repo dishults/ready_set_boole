@@ -1,5 +1,5 @@
-public extension UInt32 {
-    var info: String {
-        "\(self) (\(String(self, radix: 2)))"
-    }
+extension UInt32 {
+  public var info: String {
+    "\(self) (\(String(self, radix: 2)))"
+  }
 }
