@@ -1,5 +1,7 @@
 import XCTest
 
+import func Exercises.multiplier
+
 @testable import Ex01
 
 final class Tests: XCTestCase {

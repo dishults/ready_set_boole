@@ -1,5 +1,7 @@
 import XCTest
 
+import func Exercises.adder
+
 @testable import Ex00
 
 final class Tests: XCTestCase {
