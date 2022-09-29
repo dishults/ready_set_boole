@@ -1,6 +1,6 @@
 import XCTest
 
-import func Exercises.multiplier
+import func Functions.multiplier
 
 @testable import Ex01
 

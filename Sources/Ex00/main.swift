@@ -1,6 +1,6 @@
 import Utils
 
-import func Exercises.adder
+import func Functions.adder
 
 let a: UInt32 = 11
 let b: UInt32 = 22

@@ -1,6 +1,6 @@
 import XCTest
 
-import func Exercises.adder
+import func Functions.adder
 
 @testable import Ex00
 

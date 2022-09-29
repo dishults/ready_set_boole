@@ -1,6 +1,6 @@
 import Utils
 
-import func Exercises.multiplier
+import func Functions.multiplier
 
 let a: UInt32 = 2
 let b: UInt32 = 4
