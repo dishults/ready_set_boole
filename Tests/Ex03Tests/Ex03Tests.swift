@@ -4,7 +4,7 @@ import func Functions.eval_formula
 
 final class Tests: XCTestCase {
 
-  let expectedResults: [String: Bool] = [
+  let expectedResults = [
     // From the subject
     "10&": false,
     "10|": true,
@@ -30,8 +30,28 @@ final class Tests: XCTestCase {
   func testRange() throws {
     for (formula, expected) in self.expectedResults {
       var formula = formula
-      let result = eval_formula(&formula)
+      let result = try? eval_formula(&formula)
       XCTAssertEqual(result, expected)
+    }
+  }
+
+  let incorrectFormulas = [
+    "",
+    "1&",
+    "0|",
+    "0^",
+    "1>",
+    "1=",
+    "111=",
+    "!",
+    "&",
+    "*",
+    "10?",
+  ]
+
+  func testErrors() throws {
+    for var formula in self.incorrectFormulas {
+      XCTAssertThrowsError(try eval_formula(&formula))
     }
   }
 
