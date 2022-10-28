@@ -1,25 +1,10 @@
-extension Character {
-  public var isASCIIUpperLetter: Bool {
-    let asciiValue = self.asciiValue ?? 0
-    return asciiValue > 64 && asciiValue < 91
-  }
-}
+import Utils
 
-extension UInt32 {
-  public func pow(_ right: UInt32) -> UInt32 {
-    var res: UInt32 = self
-    for _ in 1..<right {
-      res *= self
-    }
-    return res
-  }
-}
-
-public func get_truth_table(_ formula: UnsafePointer<String>) throws -> [String] {
+public func getTruthTable(_ formula: UnsafePointer<String>) throws -> [String] {
   let formula = formula.pointee.uppercased()
   let sortedKeys: [Character]
   var indexedVariables = [Character: Int]()
-  var line = [String]()
+  var line = ""
   var truthTable = [String]()
 
   // MARK: - Init variables
@@ -29,55 +14,52 @@ public func get_truth_table(_ formula: UnsafePointer<String>) throws -> [String]
     }
   }
   sortedKeys = Array(indexedVariables.keys).sorted(by: <)
-  for k in sortedKeys {
-    line.append("| \(k) ")
-  }
-  line.append("| = |")
-  truthTable.append(line.joined())
+  line = sortedKeys.cellsLine
+  line.append(" = |")
+  truthTable.append(line)
 
   // MARK: - Add separator line
-  line = []
+  line = ""
   for _ in 0..<sortedKeys.count {
     line.append("|---")
   }
   line.append("|---|")
-  truthTable.append(line.joined())
+  truthTable.append(line)
 
   // MARK: - Run tests
   for i: UInt32 in 0..<UInt32(2).pow(UInt32(sortedKeys.count)) {
     // MARK: - Generate test values for variables
-    let iBinary = String(i, radix: 2)
+    let iBinary = i.binary
     let zerosPadding = sortedKeys.count - iBinary.count
-    let testValues = Array("\(String(repeating: "0", count: zerosPadding))\(iBinary)")
+    guard zerosPadding >= 0 else {
+      throw FormulaError.notEnoughValues
+    }
+    var testValues = Array("\(String(repeating: "0", count: zerosPadding))\(iBinary)")
 
     // MARK: - Generate test formula
-    var formulaVersion = [Character]()
+    var testFormula = ""
     for c in formula {
       if c.isASCIIUpperLetter {
         let testValue = testValues[indexedVariables[c]!]
-        formulaVersion.append(testValue)
+        testFormula.append(testValue)
       } else {
-        formulaVersion.append(c)
+        testFormula.append(c)
       }
     }
 
     // MARK: - Test formula
-    var testFormula = String(formulaVersion)
-    let result = try eval_formula(&testFormula) ? "1" : "0"
+    let result: Character = try eval_formula(&testFormula) ? "1" : "0"
+    testValues.append(result)
 
     // MARK: - Save result
-    line = []
-    for v in testValues {
-      line.append("| \(v) ")
-    }
-    line.append("| \(result) |")
-    truthTable.append(line.joined())
+    line = testValues.cellsLine
+    truthTable.append(line)
   }
 
   return truthTable
 }
 
 public func print_truth_table(_ formula: UnsafePointer<String>) throws {
-  let result = try get_truth_table(formula)
-  print(result.joined(separator: "\n"))
+  let truthTable = try getTruthTable(formula)
+  print(truthTable.joined(separator: "\n"))
 }

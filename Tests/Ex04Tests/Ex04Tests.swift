@@ -1,6 +1,6 @@
 import XCTest
 
-import func Functions.get_truth_table
+import func Functions.getTruthTable
 import func Functions.print_truth_table
 
 final class Tests: XCTestCase {
@@ -19,6 +19,7 @@ final class Tests: XCTestCase {
       "| 1 | 1 | 0 | 1 |",
       "| 1 | 1 | 1 | 1 |",
     ],
+    // Extras
     "AB&A|": [
       "| A | B | = |",
       "|---|---|---|",
@@ -26,13 +27,13 @@ final class Tests: XCTestCase {
       "| 0 | 1 | 0 |",
       "| 1 | 0 | 1 |",
       "| 1 | 1 | 1 |",
-    ]
+    ],
   ]
 
   func testRange() throws {
     for (formula, expected) in self.expectedResults {
       var formula = formula
-      let result = try? get_truth_table(&formula)
+      let result = try? getTruthTable(&formula)
       XCTAssertEqual(result, expected)
     }
   }
