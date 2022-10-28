@@ -34,7 +34,8 @@ public func getTruthTable(_ formula: UnsafePointer<String>) throws -> [String] {
     guard zerosPadding >= 0 else {
       throw FormulaError.notEnoughValues
     }
-    var testValues = Array("\(String(repeating: "0", count: zerosPadding))\(iBinary)")
+    var testValues = Array(repeating: Character("0"), count: zerosPadding)
+    testValues.append(contentsOf: iBinary)
 
     // MARK: - Generate test formula
     var testFormula = ""

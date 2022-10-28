@@ -17,14 +17,21 @@ extension Character {
 }
 
 extension UInt32 {
-  public var binary: String {
-    String(self, radix: 2) // TODO
+  public var binary: [Character] {
+    var remainders = [Character]()
+    var decimal = self
+    while decimal > 0 {
+      let remainder: Character = ((decimal % 2) == 0) ? "0" : "1"
+      remainders.append(remainder)
+      decimal = decimal / 2
+    }
+    return remainders.reversed()
   }
-  
+
   public var info: String {
-    "\(self) (\(self.binary))"
+    "\(self) (\(String(self.binary)))"
   }
-  
+
   public func pow(_ right: UInt32) -> UInt32 {
     if right == 0 {
       return 1
