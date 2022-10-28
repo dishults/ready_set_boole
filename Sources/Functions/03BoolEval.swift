@@ -4,7 +4,7 @@ extension Bool {
   }
 
   static func > (left: Bool, right: Bool) -> Bool {
-    return !(left == true && right == false)
+    return !left || right
   }
 }
 
