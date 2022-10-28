@@ -1,41 +1,41 @@
 import Utils
 
-public func getTruthTable(_ formula: UnsafePointer<String>) throws -> [String] {
-  let formula = formula.pointee.uppercased()
+public class TruthTable {
+  let formula: String
   let sortedKeys: [Character]
-  var indexedVariables = [Character: Int]()
-  var line = ""
-  var truthTable = [String]()
+  public let maxTests: UInt32
+  public var currentTest: UInt32
+  var indexedVariables: [Character: Int]
 
-  // MARK: - Init variables
-  for c in formula {
-    if c.isASCIIUpperLetter && !indexedVariables.keys.contains(c) {
-      indexedVariables[c] = indexedVariables.count
+  public var header: [String] {
+    [
+      "\(sortedKeys.cellsLine) = |",  // Variables
+      String(repeating: "|---", count: sortedKeys.count) + "|---|",  // Separator line
+    ]
+  }
+
+  public init(_ formula: UnsafePointer<String>) {
+    self.formula = formula.pointee.uppercased()
+    indexedVariables = [:]
+    for c in self.formula {
+      if c.isASCIIUpperLetter && !indexedVariables.keys.contains(c) {
+        indexedVariables[c] = indexedVariables.count
+      }
     }
+    sortedKeys = Array(indexedVariables.keys).sorted(by: <)
+    maxTests = UInt32(2).pow(UInt32(sortedKeys.count))
+    currentTest = 0
   }
-  sortedKeys = Array(indexedVariables.keys).sorted(by: <)
-  line = sortedKeys.cellsLine
-  line.append(" = |")
-  truthTable.append(line)
 
-  // MARK: - Add separator line
-  line = ""
-  for _ in 0..<sortedKeys.count {
-    line.append("|---")
-  }
-  line.append("|---|")
-  truthTable.append(line)
-
-  // MARK: - Run tests
-  for i: UInt32 in 0..<UInt32(2).pow(UInt32(sortedKeys.count)) {
+  public func runTest() throws -> String {
     // MARK: - Generate test values for variables
-    let iBinary = i.binary
-    let zerosPadding = sortedKeys.count - iBinary.count
+    let currentTestBinary = currentTest.binary
+    let zerosPadding = sortedKeys.count - currentTestBinary.count
     guard zerosPadding >= 0 else {
       throw FormulaError.notEnoughValues
     }
     var testValues = Array(repeating: Character("0"), count: zerosPadding)
-    testValues.append(contentsOf: iBinary)
+    testValues.append(contentsOf: currentTestBinary)
 
     // MARK: - Generate test formula
     var testFormula = ""
@@ -51,16 +51,16 @@ public func getTruthTable(_ formula: UnsafePointer<String>) throws -> [String] {
     // MARK: - Test formula
     let result: Character = try eval_formula(&testFormula) ? "1" : "0"
     testValues.append(result)
-
-    // MARK: - Save result
-    line = testValues.cellsLine
-    truthTable.append(line)
+    currentTest += 1
+    return testValues.cellsLine
   }
 
-  return truthTable
 }
 
 public func print_truth_table(_ formula: UnsafePointer<String>) throws {
-  let truthTable = try getTruthTable(formula)
-  print(truthTable.joined(separator: "\n"))
+  let truthTable = TruthTable(formula)
+  print(truthTable.header.joined(separator: "\n"))
+  while truthTable.currentTest < truthTable.maxTests {
+    print(try truthTable.runTest())
+  }
 }

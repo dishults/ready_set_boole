@@ -1,6 +1,6 @@
 import XCTest
 
-import func Functions.getTruthTable
+import class Functions.TruthTable
 import func Functions.print_truth_table
 
 final class Tests: XCTestCase {
@@ -33,8 +33,14 @@ final class Tests: XCTestCase {
   func testRange() throws {
     for (formula, expected) in self.expectedResults {
       var formula = formula
-      let result = try? getTruthTable(&formula)
-      XCTAssertEqual(result, expected)
+      let truthTable = TruthTable(&formula)
+      var results = truthTable.header
+
+      while truthTable.currentTest < truthTable.maxTests {
+        let result = try truthTable.runTest()
+        results.append(result)
+      }
+      XCTAssertEqual(results, expected)
     }
   }
 
