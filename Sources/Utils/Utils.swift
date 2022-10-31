@@ -7,6 +7,12 @@ extension Array {
     line.append("|")
     return line
   }
+
+  public mutating func popRange(_ bounds: Range<Int>) -> [Element] {
+    let slice = self[bounds]
+    self.removeSubrange(bounds)
+    return Array(slice)
+  }
 }
 
 extension Character {

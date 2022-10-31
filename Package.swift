@@ -17,11 +17,13 @@ let package = Package(
     .executableTarget(name: "Ex02", dependencies: ["Functions", "Utils"]),
     .executableTarget(name: "Ex03", dependencies: ["Functions"]),
     .executableTarget(name: "Ex04", dependencies: ["Functions"]),
+    .executableTarget(name: "Ex05", dependencies: ["Functions"]),
     .testTarget(name: "Ex00Tests", dependencies: ["Functions", "Ex00"]),
     .testTarget(name: "Ex01Tests", dependencies: ["Functions", "Ex01"]),
     .testTarget(name: "Ex02Tests", dependencies: ["Functions"]),
     .testTarget(name: "Ex03Tests", dependencies: ["Functions"]),
     .testTarget(name: "Ex04Tests", dependencies: ["Functions"]),
+    .testTarget(name: "Ex05Tests", dependencies: ["Functions"]),
     .target(name: "Utils"),
     .target(name: "Functions", dependencies: ["Utils"]),
   ]
