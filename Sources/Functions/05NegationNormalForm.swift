@@ -20,11 +20,33 @@ public class NNF {
   }
 
   func runBasicConversion() throws {
+    var n2 = 0
+    func getVar() -> [Character] {
+      if nnf[n2].isASCIIUpperLetter {
+        n2 -= 1
+        return [nnf[n2 + 1]]
+      } else if nnf[n2] == "!" && nnf[n2 - 1].isASCIIUpperLetter {
+        n2 -= 2
+        return [nnf[n2 + 1], "!"]
+      } else if nnf[n2 + 1] == "!" && "&|".contains(nnf[n2]) {
+        return []  // TODO
+      } else {
+        return []
+      }
+    }
+
     var n = 0
     for c in formula {
       if c == ">" {
-        nnf.insert("!", at: n - 1)
-        n += 1
+        n2 = n - 1
+        let B = getVar()
+        if nnf[n - B.count - 1] == "!" {
+          nnf.remove(at: n - B.count - 1)
+          n -= 1
+        } else {
+          nnf.insert("!", at: n - B.count)
+          n += 1
+        }
         nnf.append("|")
 
       } else if c == "!" && nnf[n - 1] == "!" {
@@ -32,9 +54,12 @@ public class NNF {
         n -= 2
 
       } else if c == "=" {
-        let A = nnf[n - 2]
-        let B = nnf[n - 1]
-        nnf.append(contentsOf: ["&", A, "!", B, "!", "&", "|"])
+        n2 = n - 1
+        let B1 = getVar()
+        let B2 = B1.count == 1 ? B1 + ["!"] : [B1[0]]
+        let A1 = getVar()
+        let A2 = A1.count == 1 ? A1 + ["!"] : [A1[0]]
+        nnf.append(contentsOf: ["&"] + A2 + B2 + ["&", "|"])
 
       } else {
         nnf.append(c)
