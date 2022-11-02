@@ -1,16 +1,72 @@
 import Utils
 
-public class NNF {
+public class Char: CustomStringConvertible, CustomDebugStringConvertible {
+  let isOperator: Bool
+  var value: Character
+  var positive: Bool
+
+  public init(_ value: Character, positive: Bool = true) {
+    self.value = value
+    self.positive = positive
+    self.isOperator = !value.isASCIIUpperLetter
+  }
+
+  public func toggle() {
+    self.positive.toggle()
+  }
+  
+  public func toggleComplexOperator() {
+    value = value == "&" ? "|" : "&"
+    toggle()
+  }
+
+  public func copy() -> Char {
+    Char(value, positive: positive)
+  }
+
+  public var isComplexOperator: Bool {
+    isOperator && !positive
+  }
+
+  public var description: String {
+    isOperator ? String(value) : "\(value)\(positive ? "" : "!")"
+  }
+
+  public var debugDescription: String {
+    description
+  }
+
+}
+
+public class NNF: CustomStringConvertible, CustomDebugStringConvertible {
   var formula: String
-  var nnf: [Character]
+  var nnf: [Char]
 
   public init(_ formula: UnsafePointer<String>) {
     self.formula = formula.pointee.uppercased()
     nnf = []
   }
 
-  public func getConvertedFormula() -> String {
-    return String(nnf)
+  public func initNNF() throws {
+    try runBasicChecks()
+    var n = 0
+    for c in self.formula {
+      if c == "!" {
+        nnf[n - 1].toggle()
+        n -= 1
+      } else {
+        nnf.append(Char(c))
+      }
+      n += 1
+    }
+  }
+
+  public var description: String {
+    (nnf.map { String(describing: $0) }).joined()
+  }
+
+  public var debugDescription: String {
+    description
   }
 
   /// Test formula for correctness
@@ -20,49 +76,24 @@ public class NNF {
   }
 
   func runBasicConversion() throws {
-    var n2 = 0
-    func getVar() -> [Character] {
-      if nnf[n2].isASCIIUpperLetter {
-        n2 -= 1
-        return [nnf[n2 + 1]]
-      } else if nnf[n2] == "!" && nnf[n2 - 1].isASCIIUpperLetter {
-        n2 -= 2
-        return [nnf[n2 + 1], "!"]
-      } else if nnf[n2 + 1] == "!" && "&|".contains(nnf[n2]) {
-        return []  // TODO
-      } else {
-        return []
-      }
-    }
-
     var n = 0
-    for c in formula {
-      if c == ">" {
-        n2 = n - 1
-        let B = getVar()
-        if nnf[n - B.count - 1] == "!" {
-          nnf.remove(at: n - B.count - 1)
-          n -= 1
-        } else {
-          nnf.insert("!", at: n - B.count)
-          n += 1
-        }
-        nnf.append("|")
+    while n < nnf.count {
+      let c = nnf[n]
+      if c.value == ">" {
+        let A = nnf[n - 2]
+        A.toggle()
+        c.value = "|"
 
-      } else if c == "!" && nnf[n - 1] == "!" {
-        nnf.removeLast()
-        n -= 2
-
-      } else if c == "=" {
-        n2 = n - 1
-        let B1 = getVar()
-        let B2 = B1.count == 1 ? B1 + ["!"] : [B1[0]]
-        let A1 = getVar()
-        let A2 = A1.count == 1 ? A1 + ["!"] : [A1[0]]
-        nnf.append(contentsOf: ["&"] + A2 + B2 + ["&", "|"])
-
-      } else {
-        nnf.append(c)
+      } else if c.value == "=" {
+        let B1 = nnf[n - 1]
+        let B2 = B1.copy()
+        B2.toggle()
+        let A1 = nnf[n - 2]
+        let A2 = A1.copy()
+        A2.toggle()
+        c.value = "&"
+        nnf.insert(contentsOf: [A2, B2, Char("&"), Char("|")], at: n + 1)
+        n += 4
       }
 
       n += 1
@@ -72,18 +103,10 @@ public class NNF {
   func runDeMorganConversion() throws {
     var n = 0
     for c in nnf {
-      if c == "!" {
-        let c2 = nnf[n - 1]
-        if c2 == "!" {
-          nnf.removeSubrange(n - 1..<n)
-          n -= 2
-        } else if "&|".contains(c2) {
-          nnf.remove(at: n)
-          n -= 1
-          try convert(n)
-          try runDeMorganConversion()
-          break
-        }
+      if c.isComplexOperator {
+        try convert(n)
+        try runDeMorganConversion()
+        break
       }
       n += 1
     }
@@ -92,19 +115,13 @@ public class NNF {
   func convert(_ n: Int) throws {
     var n = n
     while n > 0 {
-      if "&|".contains(nnf[n]) {
-        nnf[n] = nnf[n] == "&" ? "|" : "&"
+      if nnf[n].isComplexOperator {
+        nnf[n].toggleComplexOperator()
         n -= 1
-        if nnf[n].isASCIIUpperLetter {
-          nnf.insert("!", at: n + 1)
-          n -= 1
-          if "&|".contains(nnf[n]) || nnf[n].isASCIIUpperLetter {
-            nnf.insert("!", at: n + 1)
-          } else if nnf[n] == "!" {
-            nnf.remove(at: n)
-          }
-          break
-        }
+        nnf[n].toggle()
+        n -= 1
+        nnf[n].toggle()
+        break
       }
       n -= 1
     }
@@ -114,8 +131,8 @@ public class NNF {
 
 public func negation_normal_form(_ formula: UnsafePointer<String>) throws -> String {
   let nnf = NNF(formula)
-  try nnf.runBasicChecks()
+  try nnf.initNNF()
   try nnf.runBasicConversion()
   try nnf.runDeMorganConversion()
-  return nnf.getConvertedFormula()
+  return String(describing: nnf)
 }
