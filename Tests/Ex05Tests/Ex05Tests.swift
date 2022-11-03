@@ -20,14 +20,17 @@ final class Tests: XCTestCase {
     // =
     "A!B=": "A!B&AB!&|",
     "AB!=": "AB!&A!B&|",
+    "A!B!=": "A!B!&AB&|",
     // Multi
     "AB>B|C&!": "AB!&B!&C!|",
-      /* !(((A -> B) | B) & C)
+    /* !(((A -> B) | B) & C)
        !(((!A | B) | B) & C)    A!B|B|C&!
        !((!A | B) | B) | !C     A!B|B|!C!|
        (!(!A | B) & !B) | !C    A!B|!B!&C!|
        ((A & !B) & !B) | !C     AB!&B!&C!|
        */
+    "AB|C&!A=": "A!B!&C!|A&AB|C&A!&|",
+    "AB|C&A=": "AB|C&A&A!B!&C!|A!&|",
   ]
 
   func testRange() throws {

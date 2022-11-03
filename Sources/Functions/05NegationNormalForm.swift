@@ -14,8 +14,8 @@ public class Char: CustomStringConvertible, CustomDebugStringConvertible {
   public func toggle() {
     self.positive.toggle()
   }
-  
-  public func toggleComplexOperator() {
+
+  public func toggleNegativeOperator() {
     value = value == "&" ? "|" : "&"
     toggle()
   }
@@ -24,7 +24,7 @@ public class Char: CustomStringConvertible, CustomDebugStringConvertible {
     Char(value, positive: positive)
   }
 
-  public var isComplexOperator: Bool {
+  public var isNegativeOperator: Bool {
     isOperator && !positive
   }
 
@@ -75,7 +75,18 @@ public class NNF: CustomStringConvertible, CustomDebugStringConvertible {
     _ = try truthTable.runTest()
   }
 
-  func runBasicConversion() throws {
+  func processPositiveOperators() throws {
+    func findStartOfA(_ n: Int) -> Int {
+      var i = n
+      while i > 0 {
+        if !nnf[i].isOperator && !nnf[i - 1].isOperator {
+          return i - 1
+        }
+        i -= 1
+      }
+      return n
+    }
+
     var n = 0
     while n < nnf.count {
       let c = nnf[n]
@@ -85,27 +96,40 @@ public class NNF: CustomStringConvertible, CustomDebugStringConvertible {
         c.value = "|"
 
       } else if c.value == "=" {
+        // Get B2
         let B1 = nnf[n - 1]
         let B2 = B1.copy()
         B2.toggle()
+
+        // Get A2
         let A1 = nnf[n - 2]
-        let A2 = A1.copy()
-        A2.toggle()
+        var A2 = [A1.copy()]
+        A2[0].toggle()
+        if A2[0].isOperator {
+          let tmpA = A2[0]
+          A2 = []
+          for i in findStartOfA(n - 3)...n - 3 {
+            A2.append(nnf[i].copy())
+          }
+          A2.append(tmpA)
+        }
+
+        // Save A2B2
         c.value = "&"
-        nnf.insert(contentsOf: [A2, B2, Char("&"), Char("|")], at: n + 1)
-        n += 4
+        nnf.insert(contentsOf: A2 + [B2, Char("&"), Char("|")], at: n + 1)
+        n += A2.count + 3
       }
 
       n += 1
     }
   }
 
-  func runDeMorganConversion() throws {
+  func processNegativeOperators() throws {
     var n = 0
     for c in nnf {
-      if c.isComplexOperator {
+      if c.isNegativeOperator {
         try convert(n)
-        try runDeMorganConversion()
+        try processNegativeOperators()
         break
       }
       n += 1
@@ -115,8 +139,8 @@ public class NNF: CustomStringConvertible, CustomDebugStringConvertible {
   func convert(_ n: Int) throws {
     var n = n
     while n > 0 {
-      if nnf[n].isComplexOperator {
-        nnf[n].toggleComplexOperator()
+      if nnf[n].isNegativeOperator {
+        nnf[n].toggleNegativeOperator()
         n -= 1
         nnf[n].toggle()
         n -= 1
@@ -132,7 +156,7 @@ public class NNF: CustomStringConvertible, CustomDebugStringConvertible {
 public func negation_normal_form(_ formula: UnsafePointer<String>) throws -> String {
   let nnf = NNF(formula)
   try nnf.initNNF()
-  try nnf.runBasicConversion()
-  try nnf.runDeMorganConversion()
+  try nnf.processPositiveOperators()
+  try nnf.processNegativeOperators()
   return String(describing: nnf)
 }
