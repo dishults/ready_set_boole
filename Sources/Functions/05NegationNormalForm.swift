@@ -29,7 +29,7 @@ public class Char: CustomStringConvertible, CustomDebugStringConvertible {
   }
 
   public var description: String {
-    isOperator ? String(value) : "\(value)\(positive ? "" : "!")"
+    "\(value)\(positive ? "" : "!")"
   }
 
   public var debugDescription: String {
@@ -117,6 +117,28 @@ public class NNF: CustomStringConvertible, CustomDebugStringConvertible {
         // Save A2B2
         c.value = "&"
         nnf.insert(contentsOf: A2 + [B2, Char("&"), Char("|")], at: n + 1)
+        n += A2.count + 3
+
+      } else if c.value == "^" {
+        // Get B2
+        let B1 = nnf[n - 1]
+        let B2 = B1.copy()
+
+        // Get A2
+        let A1 = nnf[n - 2]
+        var A2 = [A1.copy()]
+        if A2[0].isOperator {
+          let tmpA = A2[0]
+          A2 = []
+          for i in findStartOfA(n - 3)...n - 3 {
+            A2.append(nnf[i].copy())
+          }
+          A2.append(tmpA)
+        }
+
+        // Save A2B2
+        c.value = "|"
+        nnf.insert(contentsOf: A2 + [B2, Char("&", positive: false), Char("&")], at: n + 1)
         n += A2.count + 3
       }
 

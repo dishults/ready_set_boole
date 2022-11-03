@@ -1,6 +1,6 @@
 extension Bool {
   static func ^ (left: Bool, right: Bool) -> Bool {
-    return (left || right) && left != right
+    return (left || right) && !(left && right)
   }
 
   static func > (left: Bool, right: Bool) -> Bool {
