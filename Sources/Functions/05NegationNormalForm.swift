@@ -90,36 +90,15 @@ public class NNF: CustomStringConvertible, CustomDebugStringConvertible {
     var n = 0
     while n < nnf.count {
       let c = nnf[n]
-      if c.value == ">" {
+      switch c.value {
+
+      case ">":
         let A = nnf[n - 2]
         A.toggle()
         c.value = "|"
+        n += 1
 
-      } else if c.value == "=" {
-        // Get B2
-        let B1 = nnf[n - 1]
-        let B2 = B1.copy()
-        B2.toggle()
-
-        // Get A2
-        let A1 = nnf[n - 2]
-        var A2 = [A1.copy()]
-        A2[0].toggle()
-        if A2[0].isOperator {
-          let tmpA = A2[0]
-          A2 = []
-          for i in findStartOfA(n - 3)...n - 3 {
-            A2.append(nnf[i].copy())
-          }
-          A2.append(tmpA)
-        }
-
-        // Save A2B2
-        c.value = "&"
-        nnf.insert(contentsOf: A2 + [B2, Char("&"), Char("|")], at: n + 1)
-        n += A2.count + 3
-
-      } else if c.value == "^" {
+      case "=", "^":
         // Get B2
         let B1 = nnf[n - 1]
         let B2 = B1.copy()
@@ -127,9 +106,17 @@ public class NNF: CustomStringConvertible, CustomDebugStringConvertible {
         // Get A2
         let A1 = nnf[n - 2]
         var A2 = [A1.copy()]
+        if c.value == "=" {
+          B2.toggle()
+          A2[0].toggle()
+        }
+        // Find complete A2
         if A2[0].isOperator {
           let tmpA = A2[0]
           A2 = []
+          guard n - 3 >= 0 else {
+            throw FormulaError.notEnoughValues
+          }
           for i in findStartOfA(n - 3)...n - 3 {
             A2.append(nnf[i].copy())
           }
@@ -137,12 +124,19 @@ public class NNF: CustomStringConvertible, CustomDebugStringConvertible {
         }
 
         // Save A2B2
-        c.value = "|"
-        nnf.insert(contentsOf: A2 + [B2, Char("&", positive: false), Char("&")], at: n + 1)
-        n += A2.count + 3
+        if c.value == "=" {
+          c.value = "&"
+          nnf.insert(contentsOf: A2 + [B2, Char("&"), Char("|")], at: n + 1)
+        } else if c.value == "^" {
+          c.value = "|"
+          nnf.insert(contentsOf: A2 + [B2, Char("&", positive: false), Char("&")], at: n + 1)
+        }
+        n += A2.count + 3 + 1
+
+      default:
+        n += 1
       }
 
-      n += 1
     }
   }
 
@@ -162,6 +156,9 @@ public class NNF: CustomStringConvertible, CustomDebugStringConvertible {
     var n = n
     while n > 0 {
       if nnf[n].isNegativeOperator {
+        guard n - 2 >= 0 else {
+          throw FormulaError.notEnoughValues
+        }
         nnf[n].toggleNegativeOperator()
         n -= 1
         nnf[n].toggle()
