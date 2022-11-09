@@ -141,32 +141,24 @@ public class NNF: CustomStringConvertible, CustomDebugStringConvertible {
   }
 
   func processNegativeOperators() throws {
-    var n = 0
-    for c in nnf {
+    for (n, c) in nnf.enumerated() {
       if c.isNegativeOperator {
         try convert(n)
         try processNegativeOperators()
         break
       }
-      n += 1
     }
   }
 
   func convert(_ n: Int) throws {
     var n = n
-    while n > 0 {
-      if nnf[n].isNegativeOperator {
-        guard n - 2 >= 0 else {
-          throw FormulaError.notEnoughValues
-        }
-        nnf[n].toggleNegativeOperator()
-        n -= 1
-        nnf[n].toggle()
-        n -= 1
-        nnf[n].toggle()
-        break
-      }
+    guard n - 2 >= 0 else {
+      throw FormulaError.notEnoughValues
+    }
+    nnf[n].toggleNegativeOperator()
+    for _ in 0..<2 {
       n -= 1
+      nnf[n].toggle()
     }
   }
 
