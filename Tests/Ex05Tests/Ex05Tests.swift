@@ -37,12 +37,12 @@ final class Tests: XCTestCase {
     "AB|C&A=": "AB|C&A&A!B!&C!|A!&|",
     "AB|C&!A>": "AB|C&A|",
     "AB|C&!A^": "A!B!&C!|A|AB|C&A!|&",
-//    "AB|AB&!&!": "A!B!&AB&|",
-    /* !((A | B) & !(A & B))
+    "AB|AB&!&!": "A!B!&AB&|",
+      /* !((A | B) & !(A & B))
        !((A | B) & (!A | !B))   AB|A!B!|&!
        !(A | B) | !(!A | !B)    AB|!A!B!|!|
        (!A & !B) | (A & B)      A!B!&AB&|
-     */
+       */
   ]
 
   func testRange() throws {
