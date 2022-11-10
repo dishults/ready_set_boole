@@ -43,6 +43,7 @@ public class Combo: FormulaElement, CustomStringConvertible {
     self.B = B
   }
 
+  // Toggle using De Morgan’s laws
   public func toggle() {
     if "|&".contains(op.value) {
       op.toggleOperator()

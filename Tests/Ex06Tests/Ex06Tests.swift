@@ -6,14 +6,16 @@ final class Tests: XCTestCase {
 
   let expectedResults = [
     // From the subject
-//    "ABCD&|&": "ABC|BD|&&",
+    "ABCD&|&": "ABC|BD|&&",  // A & (B | (C & D))  ->  A & ((B | C) & (B | D))
     "AB&!": "A!B!|",
     "AB|!": "A!B!&",
     "AB|C&": "AB|C&",
-//    "AB|C|D|": "ABCD|||",
-//    "AB&C&D&": "ABCD&&&",
-//    "AB&!C!|": "A!B!C!||",
-//    "AB|!C!&": "A!B!C!&&",
+    "AB|C|D|": "ABCD|||",  // ((A | B) | C) | D  ->  A | (B | (C | D))
+    "AB&C&D&": "ABCD&&&",
+    "AB&!C!|": "A!B!C!||",
+    "AB|!C!&": "A!B!C!&&",
+    // Extras
+    "ABCD&&|": "AB|AC|AD|&&",
   ]
 
   func testRange() throws {
