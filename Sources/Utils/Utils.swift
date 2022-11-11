@@ -50,3 +50,10 @@ extension UInt32 {
     return res
   }
 }
+
+public func printInfixDescription(_ description: String, terminator: String = "\n") {
+  var description = description
+  description.removeFirst()
+  description.removeLast()
+  print(description, terminator: terminator)
+}

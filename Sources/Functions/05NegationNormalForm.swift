@@ -3,6 +3,7 @@ import Utils
 public protocol FormulaElement {
   func toggle()
   func copy() -> FormulaElement
+  var infixDescription: String { get }
 }
 
 public class Char: FormulaElement, CustomStringConvertible {
@@ -28,6 +29,10 @@ public class Char: FormulaElement, CustomStringConvertible {
 
   public var description: String {
     "\(value)\(positive ? "" : "!")"
+  }
+
+  public var infixDescription: String {
+    "\(positive ? "" : "!")\(value)"
   }
 
 }
@@ -92,6 +97,10 @@ public class Combo: FormulaElement, CustomStringConvertible {
     "\(A)\(B)\(op)"
   }
 
+  public var infixDescription: String {
+    "(\(A.infixDescription) \(op.infixDescription) \(B.infixDescription))"
+  }
+
 }
 
 public class NNF: CustomStringConvertible {
@@ -130,6 +139,7 @@ public class NNF: CustomStringConvertible {
     value = tmp[0] as! Combo
 
     // Convert value to NNF
+    printInfixDescription(value.infixDescription, terminator: "   ->   ")
     value.convertToNNF()
   }
 
@@ -141,5 +151,6 @@ public class NNF: CustomStringConvertible {
 
 public func negation_normal_form(_ formula: UnsafePointer<String>) throws -> String {
   let nnf = try NNF(formula)
+  printInfixDescription(nnf.value.infixDescription)
   return String(describing: nnf)
 }

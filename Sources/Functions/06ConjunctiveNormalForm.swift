@@ -1,16 +1,16 @@
+import Utils
+
 extension Combo {
   public func distribute() {
     // E.g. A | (B & C)  ->  (A | B) & (A | C)
     if type(of: B) == Combo.self {
-      let a = A.copy()
       let b = B as! Combo
-      A = Combo(A: a, op: op.copy() as! Char, B: b.A)
-      B = Combo(A: a.copy(), op: op.copy() as! Char, B: b.B)
+      B = Combo(A: A.copy(), op: op.copy() as! Char, B: b.B)
+      A = Combo(A: A, op: op.copy() as! Char, B: b.A)
     } else if type(of: A) == Combo.self {
       let a = A as! Combo
-      let b = B.copy()
-      A = Combo(A: a.A, op: op.copy() as! Char, B: b.copy())
-      B = Combo(A: a.B, op: op.copy() as! Char, B: b)
+      A = Combo(A: a.A, op: op.copy() as! Char, B: B)
+      B = Combo(A: a.B, op: op.copy() as! Char, B: B.copy())
     } else {
       return
     }
@@ -73,5 +73,6 @@ public class CNF: CustomStringConvertible {
 
 public func conjunctive_normal_form(_ formula: UnsafePointer<String>) throws -> String {
   let cnf = try CNF(formula)
+  printInfixDescription(cnf.value.infixDescription)
   return String(describing: cnf)
 }
