@@ -8,6 +8,12 @@ extension Array {
     return line
   }
 
+  public func addPadding(with element: Element, maxCount: Int) -> [Element] {
+    var padding = maxCount - count
+    padding = padding >= 0 ? padding : 0
+    return Array(repeating: element, count: padding) + self
+  }
+
   public mutating func popRange(_ bounds: Range<Int>) -> [Element] {
     let slice = self[bounds]
     self.removeSubrange(bounds)
@@ -19,6 +25,18 @@ extension Character {
   public var isASCIIUpperLetter: Bool {
     let asciiValue = self.asciiValue ?? 0
     return asciiValue > 64 && asciiValue < 91
+  }
+}
+
+extension Collection where Element: Equatable {
+  public func allIndexes(of target: Element) -> [Int] {
+    var indexes = [Int]()
+    for (n, element) in enumerated() {
+      if element == target {
+        indexes.append(n)
+      }
+    }
+    return indexes
   }
 }
 

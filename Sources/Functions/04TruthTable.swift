@@ -30,12 +30,10 @@ public class TruthTable {
   public func runTest() throws -> String {
     // MARK: - Generate test values for variables
     let currentTestBinary = currentTest.binary
-    let zerosPadding = sortedKeys.count - currentTestBinary.count
-    guard zerosPadding >= 0 else {
+    guard sortedKeys.count - currentTestBinary.count >= 0 else {
       throw FormulaError.notEnoughValues
     }
-    var testValues = Array(repeating: Character("0"), count: zerosPadding)
-    testValues.append(contentsOf: currentTestBinary)
+    var testValues = currentTestBinary.addPadding(with: "0", maxCount: sortedKeys.count)
 
     // MARK: - Generate test formula
     var testFormula = ""
