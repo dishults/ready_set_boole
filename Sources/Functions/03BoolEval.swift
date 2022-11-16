@@ -15,7 +15,7 @@ enum FormulaError: Error {
 }
 
 public func eval_formula(_ formula: UnsafePointer<String>) throws -> Bool {
-  var booleans = [Bool?]()
+  var booleans = [Bool]()
 
   for c in formula.pointee {
     // MARK: - Boolean
@@ -24,19 +24,21 @@ public func eval_formula(_ formula: UnsafePointer<String>) throws -> Bool {
 
       // MARK: - Negation
     } else if c == "!" {
-      guard booleans.count > 0, let one = booleans.removeLast() else {
+      guard booleans.count > 0 else {
         throw FormulaError.notEnoughValues
       }
-      booleans.append(!one)
+      booleans[booleans.count - 1].toggle()
 
       // MARK: - Operators
     } else if "&|^>=".contains(c) {
-      guard booleans.count > 0, let two = booleans.removeLast() else {
+      guard booleans.count > 0 else {
         throw FormulaError.notEnoughValues
       }
-      guard booleans.count > 0, let one = booleans.removeLast() else {
+      let two = booleans.removeLast()
+      guard booleans.count > 0 else {
         throw FormulaError.notEnoughValues
       }
+      let one = booleans.removeLast()
 
       switch c {
       case "&":
@@ -62,10 +64,10 @@ public func eval_formula(_ formula: UnsafePointer<String>) throws -> Bool {
   guard booleans.count > 0 else {
     throw FormulaError.notEnoughValues
   }
-  guard booleans.count == 1, let final = booleans.last! else {
+  guard booleans.count == 1 else {
     throw FormulaError.tooManyValues
   }
-  return final
+  return booleans.last!
 }
 
 // 1011||=   ->   true == (false || (true || true))   -> true

@@ -31,6 +31,63 @@ public class SetElement: Sequence {
     value.makeIterator()
   }
 
+  // Conjunction
+  static func && (A: SetElement, B: SetElement) -> SetElement {
+    var result = [Int32]()
+    for a in A {
+      if B.contains(a) && !result.contains(a) {
+        result.append(a)
+      }
+    }
+    for b in B {
+      if A.contains(b) && !result.contains(b) {
+        result.append(b)
+      }
+    }
+    return SetElement(result)
+  }
+
+  // Disjunction
+  static func || (A: SetElement, B: SetElement) -> SetElement {
+    var result = [Int32]()
+    for x in A.value + B.value {
+      if !result.contains(x) {
+        result.append(x)
+      }
+    }
+    return SetElement(result)
+  }
+
+  // Exclusive disjunction
+  static func ^ (A: SetElement, B: SetElement) -> SetElement {
+    var result = [Int32]()
+    for a in A {
+      if !B.contains(a) && !result.contains(a) {
+        result.append(a)
+      }
+    }
+    for b in B {
+      if !A.contains(b) && !result.contains(b) {
+        result.append(b)
+      }
+    }
+    return SetElement(result)
+  }
+
+  // Material condition
+  static func > (A: SetElement, B: SetElement) -> SetElement {
+    A.toggle()
+    return A || B
+  }
+
+  // Logical equivalence
+  static func == (A: SetElement, B: SetElement) -> SetElement {
+    if A.count != B.count {
+      return SetElement([])
+    }
+    return A.sorted.value == B.sorted.value ? A : SetElement([])
+  }
+
 }
 
 public class EvalSet {
@@ -77,23 +134,23 @@ public class EvalSet {
         guard values.count > 0 else {
           throw FormulaError.notEnoughValues
         }
+        let B = values.removeLast()
         guard values.count > 0 else {
           throw FormulaError.notEnoughValues
         }
-
-        let B = values.removeLast()
         let A = values.removeLast()
+
         switch c {
         case "&":
-          values.append(conjunction(A, B))
+          values.append(A && B)
         case "|":
-          values.append(disjunction(A, B))
+          values.append(A || B)
         case "^":
-          values.append(exclusiveDisjunction(A, B))
+          values.append(A ^ B)
         case ">":
-          values.append(materialCondition(A, B))
+          values.append(A > B)
         case "=":
-          values.append(logicalEquivalence(A, B))
+          values.append(A == B)
         default:
           break
         }
@@ -108,64 +165,6 @@ public class EvalSet {
       throw FormulaError.tooManyValues
     }
     _value = values.last!
-  }
-
-  // &
-  func conjunction(_ A: SetElement, _ B: SetElement) -> SetElement {
-    var result = [Int32]()
-    for a in A {
-      if B.contains(a) && !result.contains(a) {
-        result.append(a)
-      }
-    }
-    for b in B {
-      if A.contains(b) && !result.contains(b) {
-        result.append(b)
-      }
-    }
-    return SetElement(result)
-
-  }
-
-  // |
-  func disjunction(_ A: SetElement, _ B: SetElement) -> SetElement {
-    var result = [Int32]()
-    for x in A.value + B.value {
-      if !result.contains(x) {
-        result.append(x)
-      }
-    }
-    return SetElement(result)
-  }
-
-  // ^
-  func exclusiveDisjunction(_ A: SetElement, _ B: SetElement) -> SetElement {
-    var result = [Int32]()
-    for a in A {
-      if !B.contains(a) && !result.contains(a) {
-        result.append(a)
-      }
-    }
-    for b in B {
-      if !A.contains(b) && !result.contains(b) {
-        result.append(b)
-      }
-    }
-    return SetElement(result)
-  }
-
-  // >
-  func materialCondition(_ A: SetElement, _ B: SetElement) -> SetElement {
-    A.toggle()
-    return disjunction(A, B)
-  }
-
-  // =
-  func logicalEquivalence(_ A: SetElement, _ B: SetElement) -> SetElement {
-    if A.count != B.count {
-      return SetElement([])
-    }
-    return A.sorted.value == B.sorted.value ? A : SetElement([])
   }
 
 }
