@@ -22,6 +22,7 @@ let package = Package(
     .executableTarget(name: "Ex07", dependencies: ["Functions"]),
     .executableTarget(name: "Ex08", dependencies: ["Functions"]),
     .executableTarget(name: "Ex09", dependencies: ["Functions"]),
+    .executableTarget(name: "Ex10", dependencies: ["Functions"]),
     .testTarget(name: "Ex00Tests", dependencies: ["Functions", "Ex00"]),
     .testTarget(name: "Ex01Tests", dependencies: ["Functions", "Ex01"]),
     .testTarget(name: "Ex02Tests", dependencies: ["Functions"]),
@@ -32,6 +33,7 @@ let package = Package(
     .testTarget(name: "Ex07Tests", dependencies: ["Functions"]),
     .testTarget(name: "Ex08Tests", dependencies: ["Functions"]),
     .testTarget(name: "Ex09Tests", dependencies: ["Functions"]),
+    .testTarget(name: "Ex10Tests", dependencies: ["Functions"]),
     .target(name: "Utils"),
     .target(name: "Functions", dependencies: ["Utils"]),
   ]
