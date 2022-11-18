@@ -11,7 +11,7 @@ extension Bool {
 enum FormulaError: Error {
   case notEnoughValues
   case tooManyValues
-  case incorrectValue(_ c: Character)
+  case incorrectValue(_ c: Any)
 }
 
 public func eval_formula(_ formula: UnsafePointer<String>) throws -> Bool {

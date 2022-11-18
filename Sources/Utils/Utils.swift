@@ -67,6 +67,17 @@ extension UInt32 {
     }
     return res
   }
+
+  public var sqrt: UInt32 {
+    if self == 0 || self == 1 {
+      return self
+    }
+    var i: UInt64 = 2
+    while i * i < self {
+      i += 1
+    }
+    return i * i == self ? UInt32(i) : UInt32(i - 1)
+  }
 }
 
 public func printInfixDescription(_ description: String, terminator: String = "\n") {
