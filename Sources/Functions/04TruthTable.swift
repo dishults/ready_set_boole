@@ -14,8 +14,8 @@ public class TruthTable {
     ]
   }
 
-  public init(_ formula: UnsafePointer<String>) {
-    self.formula = formula.pointee.uppercased()
+  public init(_ formula: inout String) {
+    self.formula = formula.uppercased()
     indexedVariables = [:]
     for c in self.formula {
       if c.isASCIIUpperLetter && !indexedVariables.keys.contains(c) {
@@ -55,8 +55,8 @@ public class TruthTable {
 
 }
 
-public func print_truth_table(_ formula: UnsafePointer<String>) throws {
-  let truthTable = TruthTable(formula)
+public func print_truth_table(_ formula: inout String) throws {
+  let truthTable = TruthTable(&formula)
   print(truthTable.header.joined(separator: "\n"))
   while truthTable.currentTest < truthTable.maxTests {
     print(try truthTable.runTest())

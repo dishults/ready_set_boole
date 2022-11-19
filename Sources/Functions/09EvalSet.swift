@@ -97,14 +97,13 @@ public class EvalSet {
     _value.value
   }
 
-  public init(_ formula: UnsafePointer<String>, _ set: UnsafePointer<[[Int32]]>) throws {
+  public init(_ formula: inout String, _ set: inout [[Int32]]) throws {
     _value = SetElement([])
     // Test formula for correctness
-    let truthTable = TruthTable(formula)
+    let truthTable = TruthTable(&formula)
     _ = try truthTable.runTest()
 
     // Test set for correctness
-    let set = set.pointee
     guard truthTable.sortedKeys.count == set.count else {
       if truthTable.sortedKeys.count > set.count {
         throw FormulaError.tooManyValues
@@ -116,7 +115,7 @@ public class EvalSet {
     // Evaluate
     var values = [SetElement]()
     let indexedVariables = truthTable.indexedVariables
-    for c in formula.pointee {
+    for c in truthTable.formula {
       // MARK: - Variables
       if c.isASCIIUpperLetter {
         let i = indexedVariables[c]!
@@ -169,9 +168,9 @@ public class EvalSet {
 
 }
 
-public func eval_set(_ formula: UnsafePointer<String>, _ set: UnsafePointer<[[Int32]]>) throws
+public func eval_set(_ formula: inout String, _ set: inout [[Int32]]) throws
   -> [Int32]
 {
-  let evalSet = try EvalSet(formula, set)
+  let evalSet = try EvalSet(&formula, &set)
   return evalSet.value
 }

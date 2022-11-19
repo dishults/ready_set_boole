@@ -14,10 +14,10 @@ enum FormulaError: Error {
   case incorrectValue(_ c: Any)
 }
 
-public func eval_formula(_ formula: UnsafePointer<String>) throws -> Bool {
+public func eval_formula(_ formula: inout String) throws -> Bool {
   var booleans = [Bool]()
 
-  for c in formula.pointee {
+  for c in formula {
     // MARK: - Boolean
     if "01".contains(c) {
       booleans.append(c == "1")

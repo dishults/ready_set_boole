@@ -1,8 +1,7 @@
 import Utils
 
-public func powerset(_ set: UnsafePointer<[Int32]>) throws -> [[Int32]] {
+public func powerset(_ set: inout [Int32]) throws -> [[Int32]] {
   var powerSet = [[Int32]]()
-  let set = set.pointee
   guard set.count <= 31 else {
     throw FormulaError.tooManyValues
   }

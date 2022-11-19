@@ -106,9 +106,9 @@ public class Combo: FormulaElement, CustomStringConvertible {
 public class NNF: CustomStringConvertible {
   var value: Combo
 
-  public init(_ formula: UnsafePointer<String>) throws {
+  public init(_ formula: inout String) throws {
     // Test formula for correctness
-    let truthTable = TruthTable(formula)
+    let truthTable = TruthTable(&formula)
     _ = try truthTable.runTest()
 
     // Init value
@@ -149,8 +149,8 @@ public class NNF: CustomStringConvertible {
 
 }
 
-public func negation_normal_form(_ formula: UnsafePointer<String>) throws -> String {
-  let nnf = try NNF(formula)
+public func negation_normal_form(_ formula: inout String) throws -> String {
+  let nnf = try NNF(&formula)
   printInfixDescription(nnf.value.infixDescription)
   return String(describing: nnf)
 }

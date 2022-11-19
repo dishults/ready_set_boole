@@ -57,9 +57,9 @@ extension Combo {
 public class CNF: CustomStringConvertible {
   var value: Combo
 
-  public init(_ formula: UnsafePointer<String>) throws {
+  public init(_ formula: inout String) throws {
     // Test formula for correctness
-    let nnf = try NNF(formula)
+    let nnf = try NNF(&formula)
     // Init value
     value = nnf.value
     // Convert value to CNF
@@ -71,8 +71,8 @@ public class CNF: CustomStringConvertible {
   }
 }
 
-public func conjunctive_normal_form(_ formula: UnsafePointer<String>) throws -> String {
-  let cnf = try CNF(formula)
+public func conjunctive_normal_form(_ formula: inout String) throws -> String {
+  let cnf = try CNF(&formula)
   printInfixDescription(cnf.value.infixDescription)
   return String(describing: cnf)
 }
