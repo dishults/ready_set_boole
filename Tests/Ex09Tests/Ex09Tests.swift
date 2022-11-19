@@ -19,7 +19,7 @@ final class Tests: XCTestCase {
     "A!B>": ([[0, 1, 2], [0, 3, 4]], [0, 1, 2, 3, 4]),
   ]
 
-  func testRange() throws {
+  func testMain() throws {
     for (formula, testCase) in self.expectedResults {
       var formula = formula
       var (sets, expected) = testCase

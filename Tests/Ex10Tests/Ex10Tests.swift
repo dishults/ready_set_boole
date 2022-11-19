@@ -1,6 +1,7 @@
 import XCTest
 
 import func Functions.map
+import func Functions.reverse_map
 
 final class Tests: XCTestCase {
 
@@ -15,10 +16,27 @@ final class Tests: XCTestCase {
     (50000, 500, 0.5820883672177066),
   ]
 
+  func testMain() throws {
+    for (expectedX, expectedY, expectedN) in self.expectedResults {
+      // Test map
+      let n = map(UInt16(expectedX), UInt16(expectedY))
+      XCTAssertEqual(n, Float64(expectedN))
+      // Test reverse map
+      let (x, y) = try reverse_map(n)
+      XCTAssertEqual(x, expectedX)
+      XCTAssertEqual(y, expectedY)
+    }
+  }
+
   func testRange() throws {
-    for (x, y, expected) in self.expectedResults {
-      let results = map(UInt16(x), UInt16(y))
-      XCTAssertEqual(results, Float64(expected))
+    let range = 0...UInt16.max
+    for _ in 0...1000 {
+      let expectedX = UInt16.random(in: range)
+      let expectedY = UInt16.random(in: range)
+      let n = map(expectedX, expectedY)
+      let (x, y) = try reverse_map(n)
+      XCTAssertEqual(x, expectedX)
+      XCTAssertEqual(y, expectedY)
     }
   }
 

@@ -27,7 +27,7 @@ final class Tests: XCTestCase {
     "00>": true,
   ]
 
-  func testRange() throws {
+  func testMain() throws {
     for (formula, expected) in self.expectedResults {
       var formula = formula
       let result = try? eval_formula(&formula)

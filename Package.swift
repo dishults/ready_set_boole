@@ -35,7 +35,7 @@ let package = Package(
     .testTarget(name: "Ex08Tests", dependencies: ["Functions"]),
     .testTarget(name: "Ex09Tests", dependencies: ["Functions"]),
     .testTarget(name: "Ex10Tests", dependencies: ["Functions"]),
-    .testTarget(name: "Ex11Tests", dependencies: ["Functions", "Utils"]),
+    .testTarget(name: "Ex11Tests", dependencies: ["Functions"]),
     .target(name: "Utils"),
     .target(name: "Functions", dependencies: ["Utils"]),
   ]

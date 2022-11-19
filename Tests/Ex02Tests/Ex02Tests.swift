@@ -16,7 +16,7 @@ final class Tests: XCTestCase {
     8: 12,
   ]
 
-  func testRange() throws {
+  func testMain() throws {
     for (n, expected) in self.decimalToGray {
       let result = gray_code(n)
       XCTAssertEqual(result, expected)

@@ -30,7 +30,7 @@ final class Tests: XCTestCase {
     ],
   ]
 
-  func testRange() throws {
+  func testMain() throws {
     for (formula, expected) in self.expectedResults {
       var formula = formula
       let truthTable = TruthTable(&formula)

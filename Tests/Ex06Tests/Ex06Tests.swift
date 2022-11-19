@@ -20,7 +20,7 @@ final class Tests: XCTestCase {
     "AB&CD&|E|": "ACE||BCE||&ADE||BDE||&&",
   ]
 
-  func testRange() throws {
+  func testMain() throws {
     for (formula, expected) in self.expectedResults {
       var formula = formula
       let result = try? conjunctive_normal_form(&formula)

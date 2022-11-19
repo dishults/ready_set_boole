@@ -12,7 +12,7 @@ final class Tests: XCTestCase {
     "AA^": false,
   ]
 
-  func testRange() throws {
+  func testMain() throws {
     for (formula, expected) in self.expectedResults {
       var formula = formula
       let result = try? sat(&formula)

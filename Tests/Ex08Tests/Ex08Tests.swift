@@ -17,7 +17,7 @@ final class Tests: XCTestCase {
     ]
   ]
 
-  func testRange() throws {
+  func testMain() throws {
     for (testSet, expected) in self.expectedResults {
       var testSet = testSet
       let result = try powerset(&testSet)
