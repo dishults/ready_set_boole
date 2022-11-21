@@ -55,15 +55,21 @@ extension Combo {
 }
 
 public class CNF: CustomStringConvertible {
-  var value: Combo
+  var value: FormulaElement
 
   public init(_ formula: inout String) throws {
     // Test formula for correctness
     let nnf = try NNF(&formula)
+
     // Init value
-    value = nnf.value
+    guard type(of: nnf.value) == Combo.self else {
+      value = nnf.value as! Char
+      return
+    }
+    value = nnf.value as! Combo
+
     // Convert value to CNF
-    value.convertToCNF()
+    (value as! Combo).convertToCNF()
   }
 
   public var description: String {

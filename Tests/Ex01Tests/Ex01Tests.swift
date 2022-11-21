@@ -6,19 +6,26 @@ import func Functions.multiplier
 
 final class Tests: XCTestCase {
 
+  let expectedResults: [(UInt32, UInt32)] = [
+    (0, 0),
+    (2, 3),
+    (UInt32.max / 2, 2),
+    (UInt32.max / 2, UInt32.max / 2),
+  ]
+
   func testMain() throws {
-    let result = multiplier(a, b)
-    let expected = a * b
-    XCTAssertEqual(result, expected)
+    for (a, b) in self.expectedResults {
+      let result = multiplier(a, b)
+      XCTAssertEqual(result, a &* b)
+    }
   }
 
   func testRange() throws {
-    for a: UInt32 in 1...9 {
-      for b: UInt32 in a...9 {
-        let result = multiplier(a, b)
-        let expected = a * b
-        XCTAssertEqual(result, expected)
-      }
+    for _ in 0...1000 {
+      let a = UInt32.random(in: 0...UInt32.max)
+      let b = UInt32.random(in: 0...UInt32.max)
+      let result = multiplier(a, b)
+      XCTAssertEqual(result, a &* b)
     }
   }
 

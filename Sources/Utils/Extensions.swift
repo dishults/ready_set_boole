@@ -21,12 +21,28 @@ extension Array {
   }
 }
 
+// MARK: -
+
+extension Bool {
+  public static func ^ (left: Bool, right: Bool) -> Bool {
+    return (left || right) && !(left && right)
+  }
+
+  public static func > (left: Bool, right: Bool) -> Bool {
+    return !left || right
+  }
+}
+
+// MARK: -
+
 extension Character {
   public var isASCIIUpperLetter: Bool {
     let asciiValue = self.asciiValue ?? 0
     return asciiValue > 64 && asciiValue < 91
   }
 }
+
+// MARK: -
 
 extension Collection where Element: Equatable {
   public func allIndexes(of target: Element) -> [Int] {
@@ -39,6 +55,8 @@ extension Collection where Element: Equatable {
     return indexes
   }
 }
+
+// MARK: -
 
 extension UInt32 {
   public var binary: [Character] {
@@ -56,13 +74,17 @@ extension UInt32 {
     "\(self) (\(String(self.binary)))"
   }
 
-  public func pow(_ right: UInt32) -> UInt32 {
+  public func pow(_ right: UInt32) throws -> UInt32 {
     if right == 0 {
       return 1
     }
 
     var res: UInt32 = self
+    let maxValue = UInt32.max / 2
     for _ in 1..<right {
+      guard res < maxValue else {
+        throw FormulaError.tooManyValues
+      }
       res *= self
     }
     return res
@@ -78,11 +100,4 @@ extension UInt32 {
     }
     return i * i == self ? UInt32(i) : UInt32(i - 1)
   }
-}
-
-public func printInfixDescription(_ description: String, terminator: String = "\n") {
-  var description = description
-  description.removeFirst()
-  description.removeLast()
-  print(description, terminator: terminator)
 }

@@ -5,6 +5,11 @@ import func Functions.powerset
 final class Tests: XCTestCase {
 
   let expectedResults: [[Int32]: [[Int32]]] = [
+    []: [[]],
+    [1]: [
+      [],
+      [1],
+    ],
     [1, 2, 3]: [
       [],
       [3],
@@ -14,7 +19,7 @@ final class Tests: XCTestCase {
       [1, 3],
       [1, 2],
       [1, 2, 3],
-    ]
+    ],
   ]
 
   func testMain() throws {

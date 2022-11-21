@@ -14,7 +14,7 @@ public class TruthTable {
     ]
   }
 
-  public init(_ formula: inout String) {
+  public init(_ formula: inout String) throws {
     self.formula = formula.uppercased()
     indexedVariables = [:]
     for c in self.formula {
@@ -23,7 +23,7 @@ public class TruthTable {
       }
     }
     sortedKeys = Array(indexedVariables.keys).sorted(by: <)
-    maxTests = UInt32(2).pow(UInt32(sortedKeys.count))
+    maxTests = try UInt32(2).pow(UInt32(sortedKeys.count))
     currentTest = 0
   }
 
@@ -56,7 +56,7 @@ public class TruthTable {
 }
 
 public func print_truth_table(_ formula: inout String) throws {
-  let truthTable = TruthTable(&formula)
+  let truthTable = try TruthTable(&formula)
   print(truthTable.header.joined(separator: "\n"))
   while truthTable.currentTest < truthTable.maxTests {
     print(try truthTable.runTest())

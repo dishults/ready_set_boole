@@ -104,11 +104,11 @@ public class Combo: FormulaElement, CustomStringConvertible {
 }
 
 public class NNF: CustomStringConvertible {
-  var value: Combo
+  var value: FormulaElement
 
   public init(_ formula: inout String) throws {
     // Test formula for correctness
-    let truthTable = TruthTable(&formula)
+    let truthTable = try TruthTable(&formula)
     _ = try truthTable.runTest()
 
     // Init value
@@ -134,13 +134,14 @@ public class NNF: CustomStringConvertible {
       throw tmp.count == 0 ? FormulaError.notEnoughValues : FormulaError.tooManyValues
     }
     guard type(of: tmp[0]) == Combo.self else {
-      throw FormulaError.incorrectValue((tmp[0] as! Char).value)
+      value = tmp[0] as! Char
+      return
     }
     value = tmp[0] as! Combo
 
     // Convert value to NNF
     printInfixDescription(value.infixDescription, terminator: "   ->   ")
-    value.convertToNNF()
+    (value as! Combo).convertToNNF()
   }
 
   public var description: String {

@@ -1,18 +1,4 @@
-extension Bool {
-  static func ^ (left: Bool, right: Bool) -> Bool {
-    return (left || right) && !(left && right)
-  }
-
-  static func > (left: Bool, right: Bool) -> Bool {
-    return !left || right
-  }
-}
-
-enum FormulaError: Error {
-  case notEnoughValues
-  case tooManyValues
-  case incorrectValue(_ c: Any)
-}
+import Utils
 
 public func eval_formula(_ formula: inout String) throws -> Bool {
   var booleans = [Bool]()
@@ -46,9 +32,9 @@ public func eval_formula(_ formula: inout String) throws -> Bool {
       case "|":
         booleans.append(one || two)
       case "^":
-        booleans.append(one ^ two)
+        booleans.append(one ^ two)  // Utils.Extentions
       case ">":
-        booleans.append(one > two)
+        booleans.append(one > two)  // Utils.Extentions
       case "=":
         booleans.append(one == two)
       default:

@@ -12,6 +12,7 @@ final class Tests: XCTestCase {
     "AB&!": "A!B!|",
     "AB|C&!": "A!B!&C!|",
     // Extras
+    "A": "A",
     // >
     "AB!!>": "A!B|",
     "AB!>": "A!B!|",

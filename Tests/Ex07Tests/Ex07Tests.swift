@@ -10,6 +10,9 @@ final class Tests: XCTestCase {
     "AB&": true,
     "AA!&": false,
     "AA^": false,
+    // Extras
+    "A": true,
+    "A!": true,
   ]
 
   func testMain() throws {

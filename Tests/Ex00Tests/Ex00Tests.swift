@@ -6,19 +6,26 @@ import func Functions.adder
 
 final class Tests: XCTestCase {
 
+  let expectedResults: [(UInt32, UInt32)] = [
+    (0, 0),
+    (1, 2),
+    (UInt32.max / 2, UInt32.max / 2),
+    (UInt32.max / 2 + 1, UInt32.max / 2 + 1),
+  ]
+
   func testMain() throws {
-    let result = adder(a, b)
-    let expected = a + b
-    XCTAssertEqual(result, expected)
+    for (a, b) in self.expectedResults {
+      let result = adder(a, b)
+      XCTAssertEqual(result, a &+ b)
+    }
   }
 
   func testRange() throws {
-    for _ in 1...50 {
-      let a = UInt32.random(in: UInt32.min...UInt32(UInt16.max))
-      let b = UInt32.random(in: UInt32.min...UInt32(UInt16.max))
+    for _ in 0...1000 {
+      let a = UInt32.random(in: 0...UInt32.max)
+      let b = UInt32.random(in: 0...UInt32.max)
       let result = adder(a, b)
-      let expected = a + b
-      XCTAssertEqual(result, expected)
+      XCTAssertEqual(result, a &+ b)
     }
   }
 

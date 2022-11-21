@@ -15,6 +15,7 @@ final class Tests: XCTestCase {
     "AB&!C!|": "A!B!C!||",
     "AB|!C!&": "A!B!C!&&",
     // Extras
+    "A": "A",
     "ABCD&&|": "AB|AC|AD|&&",
     "AB&C|D&": "AC|BC|D&&",  // ((A & B) | C) & D  ->  (A | C) & ((B | C) & D)
     "AB&CD&|E|": "ACE||BCE||&ADE||BDE||&&",

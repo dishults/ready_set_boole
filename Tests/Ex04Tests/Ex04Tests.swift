@@ -20,6 +20,12 @@ final class Tests: XCTestCase {
       "| 1 | 1 | 1 | 1 |",
     ],
     // Extras
+    "A": [
+      "| A | = |",
+      "|---|---|",
+      "| 0 | 0 |",
+      "| 1 | 1 |",
+    ],
     "AB&A|": [
       "| A | B | = |",
       "|---|---|---|",
@@ -33,7 +39,7 @@ final class Tests: XCTestCase {
   func testMain() throws {
     for (formula, expected) in self.expectedResults {
       var formula = formula
-      let truthTable = TruthTable(&formula)
+      let truthTable = try TruthTable(&formula)
       var results = truthTable.header
 
       while truthTable.currentTest < truthTable.maxTests {

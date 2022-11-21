@@ -1,3 +1,5 @@
+import Utils
+
 public class SetElement: Sequence {
   private var _value: [Int32]
   var positive: Bool
@@ -100,7 +102,7 @@ public class EvalSet {
   public init(_ formula: inout String, _ set: inout [[Int32]]) throws {
     _value = SetElement([])
     // Test formula for correctness
-    let truthTable = TruthTable(&formula)
+    let truthTable = try TruthTable(&formula)
     _ = try truthTable.runTest()
 
     // Test set for correctness

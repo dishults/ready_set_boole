@@ -11,6 +11,9 @@ final class Tests: XCTestCase {
     "10=": false,
     "1011||=": true,
     "10|1&": true,
+    // Extras
+    "0": false,
+    "1": true,
     // !
     "0!": true,
     "1!": false,
