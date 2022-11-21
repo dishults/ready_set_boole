@@ -1,14 +1,23 @@
+import func Functions.map
 import func Functions.reverse_map
 
-do {
-  print(try reverse_map(0.0))
-  print(try reverse_map(0.9999694828875292))
-  print(try reverse_map(0.9999847414437646))
-  print(try reverse_map(1.0))
-  print()
-  print(try reverse_map(1.1641532185403987e-09))
-  print(try reverse_map(0.24999999982537702))
-  print(try reverse_map(0.5820883672177066))
-} catch {
-  print("Number error: \(error)")
+let tests: [(UInt16, UInt16)] = [
+  (0, 0),
+  (0, UInt16.max),
+  (UInt16.max, 0),
+  (UInt16.max, UInt16.max),
+  (1, 2),
+  (42, 4200),
+  (UInt16.max / 2, UInt16.max / 2),
+  (50000, 500),
+]
+
+for (x, y) in tests {
+  let n = map(x, y)
+  do {
+    let (x1, x2): (UInt16, UInt16) = try reverse_map(n)
+    print("\((x, y)) -> \(n) -> \((x1, x2))")
+  } catch {
+    print("Number error: \(error)")
+  }
 }
