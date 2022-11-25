@@ -2,7 +2,7 @@ import XCTest
 
 import func Functions.negation_normal_form
 
-final class Tests: XCTestCase {
+final class NegationNormalFormTests: XCTestCase {
 
   let expectedResults = [
     // From the subject

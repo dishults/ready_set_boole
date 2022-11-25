@@ -2,7 +2,7 @@ import XCTest
 
 import func Functions.gray_code
 
-final class Tests: XCTestCase {
+final class GrayCodeTests: XCTestCase {
 
   let expectedResults: [UInt32: UInt32] = [
     // decimal: gray

@@ -2,7 +2,7 @@ import XCTest
 
 import func Functions.conjunctive_normal_form
 
-final class Tests: XCTestCase {
+final class ConjunctiveNormalFormTests: XCTestCase {
 
   let expectedResults = [
     // From the subject

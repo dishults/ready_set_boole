@@ -2,7 +2,7 @@ import XCTest
 
 import func Functions.sat
 
-final class Tests: XCTestCase {
+final class SATTests: XCTestCase {
 
   let expectedResults = [
     // From the subject

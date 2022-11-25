@@ -1,22 +1,22 @@
 import XCTest
 
-import func Functions.multiplier
+import func Functions.adder
 
-@testable import Ex01
+@testable import Ex00
 
-final class Tests: XCTestCase {
+final class AdderTests: XCTestCase {
 
   let expectedResults: [(UInt32, UInt32)] = [
     (0, 0),
-    (2, 3),
-    (UInt32.max / 2, 2),
+    (1, 2),
     (UInt32.max / 2, UInt32.max / 2),
+    (UInt32.max / 2 + 1, UInt32.max / 2 + 1),
   ]
 
   func testMain() throws {
     for (a, b) in self.expectedResults {
-      let result = multiplier(a, b)
-      XCTAssertEqual(result, a &* b)
+      let result = adder(a, b)
+      XCTAssertEqual(result, a &+ b)
     }
   }
 
@@ -24,8 +24,8 @@ final class Tests: XCTestCase {
     for _ in 0...1000 {
       let a = UInt32.random(in: 0...UInt32.max)
       let b = UInt32.random(in: 0...UInt32.max)
-      let result = multiplier(a, b)
-      XCTAssertEqual(result, a &* b)
+      let result = adder(a, b)
+      XCTAssertEqual(result, a &+ b)
     }
   }
 

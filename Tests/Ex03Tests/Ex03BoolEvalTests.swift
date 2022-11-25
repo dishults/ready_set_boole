@@ -2,7 +2,7 @@ import XCTest
 
 import func Functions.eval_formula
 
-final class Tests: XCTestCase {
+final class BoolEvalTests: XCTestCase {
 
   let expectedResults = [
     // From the subject

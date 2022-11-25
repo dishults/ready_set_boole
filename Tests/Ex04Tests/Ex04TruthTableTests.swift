@@ -3,7 +3,7 @@ import XCTest
 import class Functions.TruthTable
 import func Functions.print_truth_table
 
-final class Tests: XCTestCase {
+final class TruthTableTests: XCTestCase {
 
   let expectedResults = [
     // From the subject

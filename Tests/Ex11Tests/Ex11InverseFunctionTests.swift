@@ -3,7 +3,7 @@ import XCTest
 import func Functions.map
 import func Functions.reverse_map
 
-final class Tests: XCTestCase {
+final class InverseFunctionTests: XCTestCase {
 
   let expectedResults = [
     (0, 0, 0.0),
@@ -18,25 +18,36 @@ final class Tests: XCTestCase {
 
   func testMain() throws {
     for (expectedX, expectedY, expectedN) in self.expectedResults {
-      // Test map
-      let n = map(UInt16(expectedX), UInt16(expectedY))
-      XCTAssertEqual(n, Float64(expectedN))
       // Test reverse map
-      let (x, y) = try reverse_map(n)
+      let (x, y) = try reverse_map(expectedN)
       XCTAssertEqual(x, expectedX)
       XCTAssertEqual(y, expectedY)
+      // Test map
+      let n = map(UInt16(x), UInt16(y))
+      XCTAssertEqual(n, Float64(expectedN))
     }
   }
 
   func testRange() throws {
-    let range = 0...UInt16.max
-    for _ in 0...1000 {
-      let expectedX = UInt16.random(in: range)
-      let expectedY = UInt16.random(in: range)
-      let n = map(expectedX, expectedY)
-      let (x, y) = try reverse_map(n)
-      XCTAssertEqual(x, expectedX)
-      XCTAssertEqual(y, expectedY)
+    let range = 0...UInt32.max
+    for _ in 0...100000 {
+      let expectedN = Float64(UInt32.random(in: range) / UInt32.max)
+      let (x, y) = try reverse_map(expectedN)
+      let n = map(x, y)
+      XCTAssertEqual(n, expectedN)
+    }
+  }
+
+  let incorrectTestCases = [
+    (-0.5),
+    (-1.0),
+    (1.5),
+    (2.0),
+  ]
+
+  func testErrors() throws {
+    for n in self.incorrectTestCases {
+      XCTAssertThrowsError(try reverse_map(n))
     }
   }
 

@@ -2,7 +2,7 @@ import XCTest
 
 import func Functions.powerset
 
-final class Tests: XCTestCase {
+final class PowersetTests: XCTestCase {
 
   let expectedResults: [[Int32]: [[Int32]]] = [
     []: [[]],

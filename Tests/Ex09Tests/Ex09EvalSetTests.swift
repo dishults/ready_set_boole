@@ -2,7 +2,7 @@ import XCTest
 
 import func Functions.eval_set
 
-final class Tests: XCTestCase {
+final class EvalSetTests: XCTestCase {
 
   let expectedResults: [String: ([[Int32]], [Int32])] = [
     // From the subject
